@@ -1,0 +1,608 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Default-Deny Safety Net (Pillar 4.1)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Hardened Global Primitives ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Verified Owner / Admin Lookup (strictly ksachin29845@gmail.com with email_verified == true or /admins/{uid})
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.get('email', '') == 'ksachin29845@gmail.com' &&
+         request.auth.token.get('email_verified', false) == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // --- Validation Blueprints (Pillar 2) ---
+
+    function isValidDeveloperConfig(data) {
+      return data.name is string && data.name.size() >= 1 && data.name.size() <= 80 &&
+             data.age is string && data.age.size() >= 1 && data.age.size() <= 30 &&
+             data.role is string && data.role.size() >= 1 && data.role.size() <= 100 &&
+             data.bio is string && data.bio.size() >= 1 && data.bio.size() <= 400 &&
+             data.email is string && data.email.size() >= 3 && data.email.size() <= 150 &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidUserCore(data, targetUserId) {
+      return (data.userId == targetUserId &&
+              data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80 &&
+              data.email is string && data.email.size() >= 1 && data.email.size() <= 150 &&
+              data.nativeLanguage is string && data.nativeLanguage.size() >= 2 && data.nativeLanguage.size() <= 40 &&
+              data.learningLanguage is string && data.learningLanguage.size() >= 2 && data.learningLanguage.size() <= 40) &&
+             (data.skillLevel in ['Beginner', 'Intermediate', 'Advanced'] &&
+              data.xp is int && data.xp >= 0 && data.xp <= 10000000 &&
+              data.streak is int && data.streak >= 0 && data.streak <= 10000 &&
+              data.hearts is int && data.hearts >= 0 && data.hearts <= 5) &&
+             (data.gems is int && data.gems >= 0 && data.gems <= 10000000 &&
+              data.lessonsCompleted is int && data.lessonsCompleted >= 0 && data.lessonsCompleted <= 100000 &&
+              data.dailyGoalMinutes is int && data.dailyGoalMinutes >= 5 && data.dailyGoalMinutes <= 120 &&
+              data.createdAt is timestamp && data.createdAt <= request.time &&
+              data.updatedAt is timestamp && data.updatedAt <= request.time);
+    }
+
+    function isValidUserLevelsAndSub(data) {
+      return (data.get('username', '') is string && data.get('username', '').size() <= 40 &&
+              data.get('studentClass', '') is string && data.get('studentClass', '').size() <= 40 &&
+              data.get('noxraPasscode', '') is string && data.get('noxraPasscode', '').size() <= 32 &&
+              data.get('onboardingCompleted', null) in [true, false, null]) &&
+             (data.get('englishClass', '') is string && data.get('englishClass', '').size() <= 40 &&
+              data.get('englishTier', null) in ['Basic', 'Mid', 'Advance', null] &&
+              data.get('englishUnlockedLevel', 1) is int && data.get('englishUnlockedLevel', 1) >= 1 && data.get('englishUnlockedLevel', 1) <= 50 &&
+              data.get('mathClass', '') is string && data.get('mathClass', '').size() <= 40 &&
+              data.get('mathTier', null) in ['Basic', 'Mid', 'Advance', null] &&
+              data.get('mathUnlockedLevel', 1) is int && data.get('mathUnlockedLevel', 1) >= 1 && data.get('mathUnlockedLevel', 1) <= 50) &&
+             (data.get('subscriptionPlan', '') is string && data.get('subscriptionPlan', '').size() <= 40 &&
+              data.get('subscriptionActive', null) in [true, false, null] &&
+              data.get('subscriptionPriceInr', 0) is int && data.get('subscriptionPriceInr', 0) >= 0 && data.get('subscriptionPriceInr', 0) <= 100000 &&
+              data.get('developerNameOverride', '') is string && data.get('developerNameOverride', '').size() <= 80 &&
+              data.get('developerAgeOverride', '') is string && data.get('developerAgeOverride', '').size() <= 30 &&
+              data.get('developerRoleOverride', '') is string && data.get('developerRoleOverride', '').size() <= 100 &&
+              data.get('developerBioOverride', '') is string && data.get('developerBioOverride', '').size() <= 400);
+    }
+
+    function isValidUserOptionalMeta(data) {
+      return (data.get('bio', '') is string && data.get('bio', '').size() <= 300 &&
+              data.get('age', 12) is int && data.get('age', 12) >= 5 && data.get('age', 12) <= 120 &&
+              data.get('photoUrl', '') is string && data.get('photoUrl', '').size() <= 500 &&
+              data.get('streakFreezeCount', 0) is int && data.get('streakFreezeCount', 0) >= 0 && data.get('streakFreezeCount', 0) <= 20 &&
+              data.get('relaxedMode', null) in [true, false, null]) &&
+             (data.get('themePreference', '') is string && data.get('themePreference', '').size() <= 30 &&
+              data.get('mascotName', '') is string && data.get('mascotName', '').size() <= 40 &&
+              data.get('mascotLevel', 1) is int && data.get('mascotLevel', 1) >= 1 && data.get('mascotLevel', 1) <= 100 &&
+              data.get('mascotOutfit', '') is string && data.get('mascotOutfit', '').size() <= 40 &&
+              data.get('unlockedLessonsCount', 1) is int && data.get('unlockedLessonsCount', 1) >= 1 && data.get('unlockedLessonsCount', 1) <= 500) &&
+             (data.get('fluencyScore', 0) is int && data.get('fluencyScore', 0) >= 0 && data.get('fluencyScore', 0) <= 100 &&
+              data.get('longestStreak', 0) is int && data.get('longestStreak', 0) >= 0 && data.get('longestStreak', 0) <= 10000 &&
+              data.get('claimedQuestIds', []) is list && data.get('claimedQuestIds', []).size() <= 50 &&
+              data.get('leaderboardPrivacy', null) in [true, false, null] &&
+              data.get('registrationDate', '') is string && data.get('registrationDate', '').size() <= 40 &&
+              data.get('registrationTime', '') is string && data.get('registrationTime', '').size() <= 40 &&
+              data.get('registrationMethod', '') is string && data.get('registrationMethod', '').size() <= 30);
+    }
+
+    function isValidUserProfile(data, targetUserId) {
+      return isValidUserCore(data, targetUserId) &&
+             isValidUserLevelsAndSub(data) &&
+             isValidUserOptionalMeta(data);
+    }
+
+    function isValidNotification(data, targetUserId) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.userId == targetUserId &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.body is string && data.body.size() >= 1 && data.body.size() <= 500 &&
+             data.category is string && data.category in ['Learning', 'Achievements', 'Friends', 'AI Tutor', 'Rewards', 'System'] &&
+             data.isRead is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             (!('iconEmoji' in data) || data.iconEmoji == null || (data.iconEmoji is string && data.iconEmoji.size() <= 16)) &&
+             (!('deepLinkRoute' in data) || data.deepLinkRoute == null || (data.deepLinkRoute is string && data.deepLinkRoute.size() <= 60));
+    }
+
+    function isValidVocabulary(data, targetUserId) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.userId == targetUserId &&
+             data.word is string && data.word.size() >= 1 && data.word.size() <= 100 &&
+             data.translation is string && data.translation.size() >= 1 && data.translation.size() <= 150 &&
+             data.language is string && data.language.size() >= 2 && data.language.size() <= 40 &&
+             data.masteryLevel is int && data.masteryLevel >= 0 && data.masteryLevel <= 5 &&
+             data.isMistake is bool &&
+             data.isFavorite is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             (!('phonetic' in data) || data.phonetic == null || (data.phonetic is string && data.phonetic.size() <= 100)) &&
+             (!('exampleSentence' in data) || data.exampleSentence == null || (data.exampleSentence is string && data.exampleSentence.size() <= 300));
+    }
+
+    function isValidAppHistoryItem(data, targetUserId) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.userId == targetUserId &&
+             data.category is string && data.category in ['Noxra AI', 'English 1-50', 'Math 1-50', 'Subscription', 'Friend Chat', 'System', 'Lesson'] &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 140 &&
+             data.summary is string && data.summary.size() >= 1 && data.summary.size() <= 1200 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             (!('subjectOrMode' in data) || data.subjectOrMode == null || (data.subjectOrMode is string && data.subjectOrMode.size() <= 60)) &&
+             (!('levelNumber' in data) || data.levelNumber == null || (data.levelNumber is int && data.levelNumber >= 1 && data.levelNumber <= 50)) &&
+             (!('xpEarned' in data) || data.xpEarned == null || (data.xpEarned is int && data.xpEarned >= 0 && data.xpEarned <= 5000));
+    }
+
+    function isValidLeaderboardEntry(data, targetUserId) {
+      return data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+             data.userId == targetUserId &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80 &&
+             data.learningLanguage is string && data.learningLanguage.size() >= 2 && data.learningLanguage.size() <= 40 &&
+             data.xp is int && data.xp >= 0 && data.xp <= 10000000 &&
+             data.streak is int && data.streak >= 0 && data.streak <= 10000 &&
+             data.league is string && data.league in ['Bronze', 'Silver', 'Gold', 'Sapphire', 'Emerald'] &&
+             data.visibility is string && data.visibility in ['public', 'private'] &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             (!('username' in data) || data.username == null || (data.username is string && data.username.size() <= 40)) &&
+             (!('studentClass' in data) || data.studentClass == null || (data.studentClass is string && data.studentClass.size() <= 40)) &&
+             (!('avatarEmoji' in data) || data.avatarEmoji == null || (data.avatarEmoji is string && data.avatarEmoji.size() <= 16)) &&
+             (!('fluencyScore' in data) || data.fluencyScore == null || (data.fluencyScore is int && data.fluencyScore >= 0 && data.fluencyScore <= 100));
+    }
+
+    function isValidDirectChatMessage(data) {
+      return data.conversationKey is string && data.conversationKey.size() >= 3 && data.conversationKey.size() <= 260 &&
+             data.participants is list && data.participants.size() == 2 &&
+             data.participants[0] is string && data.participants[0].size() >= 1 && data.participants[0].size() <= 128 &&
+             data.participants[1] is string && data.participants[1].size() >= 1 && data.participants[1].size() <= 128 &&
+             data.senderId is string && data.senderId.size() >= 1 && data.senderId.size() <= 128 &&
+             data.senderId in data.participants &&
+             data.senderName is string && data.senderName.size() >= 1 && data.senderName.size() <= 80 &&
+             data.recipientId is string && data.recipientId.size() >= 1 && data.recipientId.size() <= 128 &&
+             data.recipientId in data.participants &&
+             data.text is string && data.text.size() >= 1 && data.text.size() <= 1000 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             (!('senderUsername' in data) || data.senderUsername == null || (data.senderUsername is string && data.senderUsername.size() <= 40)) &&
+             (!('recipientName' in data) || data.recipientName == null || (data.recipientName is string && data.recipientName.size() <= 80)) &&
+             (!('recipientUsername' in data) || data.recipientUsername == null || (data.recipientUsername is string && data.recipientUsername.size() <= 40));
+    }
+
+    function isValidCommunityPost(data) {
+      return data.authorId is string && data.authorId.size() >= 1 && data.authorId.size() <= 128 &&
+             data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 80 &&
+             data.language is string && data.language.size() >= 2 && data.language.size() <= 40 &&
+             data.content is string && data.content.size() >= 1 && data.content.size() <= 400 &&
+             data.cheersCount is int && data.cheersCount >= 0 && data.cheersCount <= 1000000 &&
+             data.visibility is string && data.visibility in ['active', 'reported'] &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             (!('tag' in data) || data.tag == null || (data.tag is string && data.tag.size() <= 40));
+    }
+
+    function isValidRegistrationEvent(data, targetUserId) {
+      return (data.userId is string && data.userId.size() >= 1 && data.userId.size() <= 128 &&
+              data.userId == targetUserId &&
+              data.userName is string && data.userName.size() >= 1 && data.userName.size() <= 100 &&
+              data.email is string && data.email.size() >= 1 && data.email.size() <= 150 &&
+              data.registrationDate is string && data.registrationDate.size() >= 1 && data.registrationDate.size() <= 40 &&
+              data.registrationTime is string && data.registrationTime.size() >= 1 && data.registrationTime.size() <= 40 &&
+              data.registrationMethod is string && data.registrationMethod in ['Google'] &&
+              data.createdAt is timestamp && data.createdAt <= request.time) &&
+             (data.get('studentHandle', '') is string && data.get('studentHandle', '').size() <= 40 &&
+              data.get('studentClass', '') is string && data.get('studentClass', '').size() <= 40 &&
+              data.get('studentAge', 12) is int && data.get('studentAge', 12) >= 5 && data.get('studentAge', 12) <= 120 &&
+              data.get('selectedTier', null) in ['Basic', 'Mid', 'Advance', null] &&
+              data.get('nativeLanguage', '') is string && data.get('nativeLanguage', '').size() <= 40 &&
+              data.get('learningLanguage', '') is string && data.get('learningLanguage', '').size() <= 40 &&
+              data.get('aiAdminEmailSummary', '') is string && data.get('aiAdminEmailSummary', '').size() <= 2500 &&
+              data.get('autoEmailStatus', '') is string && data.get('autoEmailStatus', '').size() <= 120);
+    }
+
+    function isValidCustomCourseLesson(data) {
+      return data.authorId is string && data.authorId.size() >= 1 && data.authorId.size() <= 128 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 100 &&
+             data.subjectOrLanguage is string && data.subjectOrLanguage.size() >= 2 && data.subjectOrLanguage.size() <= 40 &&
+             data.level is string && data.level in ['Beginner', 'Intermediate', 'Advanced'] &&
+             data.objective is string && data.objective.size() >= 1 && data.objective.size() <= 200 &&
+             data.questionPrompt is string && data.questionPrompt.size() >= 1 && data.questionPrompt.size() <= 300 &&
+             data.options is list && data.options.size() >= 2 && data.options.size() <= 4 &&
+             data.options[0] is string && data.options[0].size() >= 1 && data.options[0].size() <= 120 &&
+             data.correctAnswer is string && data.correctAnswer.size() >= 1 && data.correctAnswer.size() <= 120 &&
+             data.explanation is string && data.explanation.size() >= 1 && data.explanation.size() <= 300 &&
+             data.xpReward is int && data.xpReward >= 5 && data.xpReward <= 200 &&
+             data.status is string && data.status in ['published', 'archived'] &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time &&
+             (!('studentClass' in data) || data.studentClass == null || (data.studentClass is string && data.studentClass.size() <= 40));
+    }
+
+    // --- Collection Match Blocks ---
+
+    // 1. Trusted Admin Marker Collection (Client read-only for self/admin; never client-writable)
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && isValidId(adminId) && (request.auth.uid == adminId || isAdmin());
+      allow list, write: if false;
+    }
+
+    // 1b. Official Global Developer Profile Config (Read by signed-in learners; Writable ONLY by verified owner/admin)
+    match /app_config/{configId} {
+      allow get: if isSignedIn() && isValidId(configId) && configId == 'developer_profile';
+      allow list: if false;
+
+      allow create: if isSignedIn() &&
+                       isValidId(configId) &&
+                       configId == 'developer_profile' &&
+                       incoming().keys().hasAll(['name', 'age', 'role', 'bio', 'email', 'updatedAt']) &&
+                       incoming().keys().hasOnly(['name', 'age', 'role', 'bio', 'email', 'updatedAt']) &&
+                       isValidDeveloperConfig(incoming()) &&
+                       isAdmin();
+
+      allow update: if isValidDeveloperConfig(incoming()) &&
+                       isSignedIn() &&
+                       isValidId(configId) &&
+                       configId == 'developer_profile' &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'name', 'age', 'role', 'bio', 'email', 'updatedAt'
+                       ]) &&
+                       isAdmin();
+
+      allow delete: if false;
+    }
+
+    // 2. Private User Profile & Subcollections
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'userId', 'displayName', 'email', 'nativeLanguage', 'learningLanguage',
+                         'skillLevel', 'xp', 'streak', 'hearts', 'gems', 'lessonsCompleted',
+                         'dailyGoalMinutes', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'displayName', 'username', 'studentClass', 'noxraPasscode',
+                         'onboardingCompleted', 'email', 'nativeLanguage', 'learningLanguage',
+                         'skillLevel', 'englishClass', 'englishTier', 'englishUnlockedLevel',
+                         'mathClass', 'mathTier', 'mathUnlockedLevel',
+                         'subscriptionPlan', 'subscriptionActive', 'subscriptionPriceInr',
+                         'xp', 'streak', 'longestStreak', 'hearts', 'gems', 'lessonsCompleted',
+                         'dailyGoalMinutes', 'bio', 'age', 'photoUrl', 'streakFreezeCount',
+                         'relaxedMode', 'themePreference', 'mascotName', 'mascotLevel',
+                         'mascotOutfit', 'unlockedLessonsCount', 'fluencyScore',
+                         'claimedQuestIds', 'leaderboardPrivacy',
+                         'registrationDate', 'registrationTime', 'registrationMethod',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidUserProfile(incoming(), userId);
+
+      allow update: if isValidUserProfile(incoming(), userId) &&
+                       isSignedIn() &&
+                       isValidId(userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt && (
+                         (request.auth.uid == userId &&
+                          incoming().email == existing().email &&
+                          incoming().diff(existing()).affectedKeys().hasOnly([
+                            'displayName', 'username', 'studentClass', 'noxraPasscode', 'onboardingCompleted',
+                            'nativeLanguage', 'learningLanguage', 'skillLevel',
+                            'englishClass', 'englishTier', 'englishUnlockedLevel',
+                            'mathClass', 'mathTier', 'mathUnlockedLevel',
+                            'subscriptionPlan', 'subscriptionActive', 'subscriptionPriceInr',
+                            'xp', 'streak', 'longestStreak', 'hearts', 'gems', 'lessonsCompleted',
+                            'dailyGoalMinutes', 'bio', 'age', 'photoUrl', 'streakFreezeCount',
+                            'relaxedMode', 'themePreference', 'mascotName', 'mascotLevel',
+                            'mascotOutfit', 'unlockedLessonsCount', 'fluencyScore',
+                            'claimedQuestIds', 'leaderboardPrivacy', 'updatedAt'
+                          ])) ||
+                         isAdmin()
+                       );
+
+      allow delete: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+
+      // 2a. Smart Notifications Subcollection (Denormalized userId for zero-latency evaluation)
+      match /notifications/{notificationId} {
+        allow get: if isSignedIn() && isValidId(userId) && isValidId(notificationId) &&
+                      request.auth.uid == userId && (resource == null || existing().userId == request.auth.uid);
+        allow list: if isSignedIn() && isValidId(userId) &&
+                       request.auth.uid == userId && existing().userId == request.auth.uid;
+
+        allow create: if isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(notificationId) &&
+                         request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll([
+                           'userId', 'title', 'body', 'category', 'isRead', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'title', 'body', 'category', 'isRead', 'iconEmoji',
+                           'deepLinkRoute', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidNotification(incoming(), userId);
+
+        allow update: if isValidNotification(incoming(), userId) &&
+                         isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(notificationId) &&
+                         request.auth.uid == userId &&
+                         existing().userId == request.auth.uid &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly(['isRead', 'updatedAt']);
+
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(notificationId) &&
+                         request.auth.uid == userId && existing().userId == request.auth.uid;
+      }
+
+      // 2b. Saved Vocabulary & Smart Revision Subcollection
+      match /vocabulary/{wordId} {
+        allow get: if isSignedIn() && isValidId(userId) && isValidId(wordId) &&
+                      request.auth.uid == userId && (resource == null || existing().userId == request.auth.uid);
+        allow list: if isSignedIn() && isValidId(userId) &&
+                       request.auth.uid == userId && existing().userId == request.auth.uid;
+
+        allow create: if isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(wordId) &&
+                         request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll([
+                           'userId', 'word', 'translation', 'language', 'masteryLevel',
+                           'isMistake', 'isFavorite', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'word', 'translation', 'language', 'masteryLevel',
+                           'isMistake', 'isFavorite', 'phonetic', 'exampleSentence',
+                           'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidVocabulary(incoming(), userId);
+
+        allow update: if isValidVocabulary(incoming(), userId) &&
+                         isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(wordId) &&
+                         request.auth.uid == userId &&
+                         existing().userId == request.auth.uid &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'translation', 'masteryLevel', 'isMistake', 'isFavorite',
+                           'phonetic', 'exampleSentence', 'updatedAt'
+                         ]);
+
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(wordId) &&
+                         request.auth.uid == userId && existing().userId == request.auth.uid;
+      }
+
+      // 2c. Per-User Saved App History Subcollection (Append-Only + Owner Delete)
+      match /app_history/{historyId} {
+        allow get: if isSignedIn() && isValidId(userId) && isValidId(historyId) &&
+                      request.auth.uid == userId && (resource == null || existing().userId == request.auth.uid);
+        allow list: if isSignedIn() && isValidId(userId) &&
+                       request.auth.uid == userId && existing().userId == request.auth.uid;
+
+        allow create: if isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(historyId) &&
+                         request.auth.uid == userId &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().keys().hasAll([
+                           'userId', 'category', 'title', 'summary', 'createdAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'category', 'title', 'summary',
+                           'subjectOrMode', 'levelNumber', 'xpEarned', 'createdAt'
+                         ]) &&
+                         isValidAppHistoryItem(incoming(), userId);
+
+        allow update: if false;
+
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(historyId) &&
+                         request.auth.uid == userId && existing().userId == request.auth.uid;
+      }
+    }
+
+    // 3. Public PII-Free Leaderboard & @username Friend Directory
+    match /leaderboard/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) &&
+                    ((resource == null && request.auth.uid == userId) ||
+                     (resource != null && (existing().visibility == 'public' || existing().userId == request.auth.uid || isAdmin())));
+      allow list: if isSignedIn() &&
+                     (existing().visibility == 'public' || existing().userId == request.auth.uid || isAdmin());
+
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'userId', 'displayName', 'learningLanguage', 'xp', 'streak',
+                         'league', 'visibility', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'displayName', 'username', 'studentClass', 'learningLanguage', 'xp', 'streak',
+                         'league', 'visibility', 'avatarEmoji', 'fluencyScore',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidLeaderboardEntry(incoming(), userId);
+
+      allow update: if isValidLeaderboardEntry(incoming(), userId) &&
+                       isSignedIn() &&
+                       isValidId(userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt && (
+                         isAdmin() ||
+                         (request.auth.uid == userId &&
+                          incoming().diff(existing()).affectedKeys().hasOnly([
+                            'displayName', 'username', 'studentClass', 'learningLanguage', 'xp', 'streak', 'league',
+                            'visibility', 'avatarEmoji', 'fluencyScore', 'updatedAt'
+                          ]))
+                       );
+
+      allow delete: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+    }
+
+    // 4. Direct Friend Chat Messages (Strictly isolated to the 2 UIDs in participants)
+    match /direct_messages/{messageId} {
+      allow get: if isSignedIn() && isValidId(messageId) && resource != null &&
+                    request.auth.uid in existing().participants;
+      allow list: if isSignedIn() && request.auth.uid in existing().participants;
+
+      allow create: if isSignedIn() &&
+                       isValidId(messageId) &&
+                       incoming().senderId == request.auth.uid &&
+                       request.auth.uid in incoming().participants &&
+                       incoming().keys().hasAll([
+                         'conversationKey', 'participants', 'senderId', 'senderName',
+                         'recipientId', 'text', 'createdAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'conversationKey', 'participants', 'senderId', 'senderName',
+                         'senderUsername', 'recipientId', 'recipientName', 'recipientUsername',
+                         'text', 'createdAt'
+                       ]) &&
+                       isValidDirectChatMessage(incoming());
+
+      allow update: if false;
+
+      allow delete: if isSignedIn() && isValidId(messageId) && existing().senderId == request.auth.uid;
+    }
+
+    // 5. Social Community & Study Group Posts
+    match /community_posts/{postId} {
+      allow get: if isSignedIn() && isValidId(postId) && resource != null &&
+                    (existing().visibility == 'active' || existing().authorId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (existing().visibility == 'active' || isAdmin());
+
+      allow create: if isSignedIn() &&
+                       isValidId(postId) &&
+                       incoming().authorId == request.auth.uid &&
+                       incoming().cheersCount == 0 &&
+                       incoming().visibility == 'active' &&
+                       incoming().keys().hasAll([
+                         'authorId', 'authorName', 'language', 'content',
+                         'cheersCount', 'visibility', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'authorId', 'authorName', 'language', 'content',
+                         'cheersCount', 'visibility', 'tag', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidCommunityPost(incoming());
+
+      allow update: if isValidCommunityPost(incoming()) &&
+                       isSignedIn() &&
+                       isValidId(postId) &&
+                       incoming().authorId == existing().authorId &&
+                       incoming().createdAt == existing().createdAt && (
+                         isAdmin() ||
+                         (existing().visibility == 'active' && (
+                           // Action 1: Author edits content/tag
+                           (request.auth.uid == existing().authorId &&
+                            incoming().visibility == 'active' &&
+                            incoming().cheersCount == existing().cheersCount &&
+                            incoming().diff(existing()).affectedKeys().hasOnly(['content', 'tag', 'updatedAt'])) ||
+                           // Action 2: Community member sends +1 encouragement cheer
+                           (incoming().visibility == 'active' &&
+                            incoming().cheersCount == existing().cheersCount + 1 &&
+                            incoming().diff(existing()).affectedKeys().hasOnly(['cheersCount', 'updatedAt'])) ||
+                           // Action 3: Community member reports inappropriate post (terminal state lock)
+                           (incoming().visibility == 'reported' &&
+                            incoming().cheersCount == existing().cheersCount &&
+                            incoming().diff(existing()).affectedKeys().hasOnly(['visibility', 'updatedAt']))
+                         ))
+                       );
+
+      allow delete: if isSignedIn() && isValidId(postId) && (existing().authorId == request.auth.uid || isAdmin());
+    }
+
+    // 6. New User Registration Events (PII isolated strictly to owner and verified Admin Dashboard)
+    match /registration_events/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'userId', 'userName', 'email', 'registrationDate',
+                         'registrationTime', 'registrationMethod', 'createdAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'userName', 'studentHandle', 'studentClass',
+                         'studentAge', 'selectedTier', 'nativeLanguage', 'learningLanguage',
+                         'email', 'registrationDate', 'registrationTime', 'registrationMethod',
+                         'aiAdminEmailSummary', 'autoEmailStatus', 'createdAt'
+                       ]) &&
+                       isValidRegistrationEvent(incoming(), userId);
+
+      allow update: if isValidRegistrationEvent(incoming(), userId) &&
+                       isSignedIn() &&
+                       isValidId(userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt && (
+                         isAdmin() ||
+                         (request.auth.uid == userId &&
+                          incoming().email == existing().email &&
+                          incoming().registrationDate == existing().registrationDate &&
+                          incoming().registrationTime == existing().registrationTime &&
+                          incoming().registrationMethod == existing().registrationMethod &&
+                          incoming().diff(existing()).affectedKeys().hasOnly([
+                            'userName', 'studentHandle', 'studentClass',
+                            'studentAge', 'selectedTier', 'nativeLanguage', 'learningLanguage',
+                            'aiAdminEmailSummary', 'autoEmailStatus'
+                          ]))
+                       );
+
+      allow delete: if isSignedIn() && isValidId(userId) && (request.auth.uid == userId || isAdmin());
+    }
+
+    // 7. Admin-Authored Custom Course Lessons (Query-aligned 'published' status for student reads; strict isAdmin() writes)
+    match /custom_courses/{courseId} {
+      allow get: if isSignedIn() && isValidId(courseId) && resource != null &&
+                    (existing().status == 'published' || isAdmin());
+      allow list: if isSignedIn() && (existing().status == 'published' || isAdmin());
+
+      allow create: if isAdmin() &&
+                       isValidId(courseId) &&
+                       incoming().authorId == request.auth.uid &&
+                       incoming().keys().hasAll([
+                         'authorId', 'title', 'subjectOrLanguage', 'level', 'objective',
+                         'questionPrompt', 'options', 'correctAnswer', 'explanation',
+                         'xpReward', 'status', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'authorId', 'title', 'subjectOrLanguage', 'level', 'studentClass', 'objective',
+                         'questionPrompt', 'options', 'correctAnswer', 'explanation',
+                         'xpReward', 'status', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidCustomCourseLesson(incoming());
+
+      allow update: if isValidCustomCourseLesson(incoming()) &&
+                       isAdmin() &&
+                       isValidId(courseId) &&
+                       incoming().authorId == existing().authorId &&
+                       incoming().createdAt == existing().createdAt;
+
+      allow delete: if isAdmin() && isValidId(courseId);
+    }
+  }
+}

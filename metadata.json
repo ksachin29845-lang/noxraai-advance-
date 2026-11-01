@@ -1,0 +1,8 @@
+{
+  "name": "Remix SachinChat",
+  "description": "Interactive Duolingo-style AI language learning platform with AI tutor chat, structured courses, interactive games, speaking lab, smart notifications, leaderboards, and developer profile.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

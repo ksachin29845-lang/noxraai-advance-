@@ -1,0 +1,318 @@
+{
+  "entities": {
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Server-managed administrator role marker document.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Verified administrator email (ksachin29845@gmail.com)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp set via FieldValue.serverTimestamp()."
+        }
+      },
+      "required": ["email", "createdAt"]
+    },
+    "DeveloperConfig": {
+      "title": "DeveloperConfig",
+      "description": "Official global Developer Profile configuration readable by all signed-in Noxra AI learners and writable strictly by the verified owner (ksachin29845@gmail.com).",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Developer full name (Sachin Kumar)." },
+        "age": { "type": "string", "description": "Developer age label (12 years (12 y))." },
+        "role": { "type": "string", "description": "Developer role/title (CEO, Founder & Owner)." },
+        "bio": { "type": "string", "description": "Developer vision and mission bio." },
+        "email": { "type": "string", "description": "Official owner email (ksachin29845@gmail.com)." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["name", "age", "role", "bio", "email", "updatedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private Noxra AI user account profile, @username handle, portable passcode, 50-level English & Math progression (Basic, Mid, Advance), and Naruto Event ₹49 subscription.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the owner." },
+        "displayName": { "type": "string", "description": "Learner full display name." },
+        "username": { "type": "string", "description": "Optional unique learner handle (e.g. @sachin_k)." },
+        "studentClass": { "type": "string", "description": "Optional student class or grade level (e.g. Class 8)." },
+        "noxraPasscode": { "type": "string", "description": "Optional portable cloud sync passcode/PIN isolated to owner." },
+        "onboardingCompleted": { "type": "boolean", "description": "Whether initial registration & welcome slideshow completed." },
+        "email": { "type": "string", "description": "Private email address (PII isolated to owner/admin)." },
+        "nativeLanguage": { "type": "string", "description": "Learner native language." },
+        "learningLanguage": { "type": "string", "description": "Target language currently being studied." },
+        "skillLevel": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"], "description": "Selected proficiency tier." },
+        "englishClass": { "type": "string", "description": "Selected class for 50-level English path." },
+        "englishTier": { "type": "string", "enum": ["Basic", "Mid", "Advance"], "description": "Selected English tier (Basic, Mid, Advance)." },
+        "englishUnlockedLevel": { "type": "integer", "description": "Highest unlocked English practice level (1-50)." },
+        "mathClass": { "type": "string", "description": "Selected class for 50-level Math path." },
+        "mathTier": { "type": "string", "enum": ["Basic", "Mid", "Advance"], "description": "Selected Math tier (Basic, Mid, Advance)." },
+        "mathUnlockedLevel": { "type": "integer", "description": "Highest unlocked Math practice level (1-50)." },
+        "subscriptionPlan": { "type": "string", "description": "Active subscription or event pass ID (e.g. FREE, NARUTO_EVENT_49)." },
+        "subscriptionActive": { "type": "boolean", "description": "Whether Naruto Event ₹49 subscription pass is active." },
+        "subscriptionPriceInr": { "type": "integer", "description": "Subscription event price in rupees (e.g. 49)." },
+        "developerNameOverride": { "type": "string", "description": "Admin-only customized developer name." },
+        "developerAgeOverride": { "type": "string", "description": "Admin-only customized developer age (default 12 y)." },
+        "developerRoleOverride": { "type": "string", "description": "Admin-only customized developer role (default CEO, Founder & Owner)." },
+        "developerBioOverride": { "type": "string", "description": "Admin-only customized developer vision bio." },
+        "xp": { "type": "integer", "description": "Total experience points earned." },
+        "streak": { "type": "integer", "description": "Current consecutive daily streak." },
+        "longestStreak": { "type": "integer", "description": "Highest consecutive daily streak achieved." },
+        "hearts": { "type": "integer", "description": "Remaining energy/lives (0-5)." },
+        "gems": { "type": "integer", "description": "Reward currency balance." },
+        "lessonsCompleted": { "type": "integer", "description": "Total completed lessons count." },
+        "dailyGoalMinutes": { "type": "integer", "description": "Daily study goal in minutes." },
+        "bio": { "type": "string", "description": "Optional learner bio." },
+        "age": { "type": "integer", "description": "Optional learner age." },
+        "photoUrl": { "type": "string", "description": "Optional avatar URL." },
+        "streakFreezeCount": { "type": "integer", "description": "Owned streak freeze items." },
+        "relaxedMode": { "type": "boolean", "description": "Unlimited/relaxed practice mode without losing hearts." },
+        "themePreference": { "type": "string", "description": "Selected UI color/mode theme." },
+        "mascotName": { "type": "string", "description": "Custom name for virtual learning companion." },
+        "mascotLevel": { "type": "integer", "description": "Virtual mascot experience level." },
+        "mascotOutfit": { "type": "string", "description": "Equipped mascot outfit." },
+        "unlockedLessonsCount": { "type": "integer", "description": "Highest unlocked lesson index." },
+        "fluencyScore": { "type": "integer", "description": "Calculated fluency score (0-100)." },
+        "claimedQuestIds": { "type": "array", "description": "Bounded list of claimed quest reward IDs to prevent duplicate claims." },
+        "leaderboardPrivacy": { "type": "boolean", "description": "Whether the student hides their profile from public leaderboards." },
+        "registrationDate": { "type": "string", "description": "Formatted registration date." },
+        "registrationTime": { "type": "string", "description": "Formatted registration time." },
+        "registrationMethod": { "type": "string", "description": "Sign-in provider (Google)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": [
+        "userId", "displayName", "email", "nativeLanguage", "learningLanguage",
+        "skillLevel", "xp", "streak", "hearts", "gems", "lessonsCompleted",
+        "dailyGoalMinutes", "createdAt", "updatedAt"
+      ]
+    },
+    "SmartNotification": {
+      "title": "SmartNotification",
+      "description": "Categorized in-app smart notification for learning, streaks, achievements, Noxra AI, friends, rewards, and system events.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner UID." },
+        "title": { "type": "string", "description": "Notification headline." },
+        "body": { "type": "string", "description": "Supportive privacy-safe notification body." },
+        "category": {
+          "type": "string",
+          "enum": ["Learning", "Achievements", "Friends", "AI Tutor", "Rewards", "System"],
+          "description": "Notification center category."
+        },
+        "isRead": { "type": "boolean", "description": "Read status." },
+        "iconEmoji": { "type": "string", "description": "Visual category badge." },
+        "deepLinkRoute": { "type": "string", "description": "Target screen route." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "title", "body", "category", "isRead", "createdAt", "updatedAt"]
+    },
+    "SavedVocabulary": {
+      "title": "SavedVocabulary",
+      "description": "Smart revision vocabulary entry, saved word, or mistake notebook item with spaced repetition mastery.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner UID." },
+        "word": { "type": "string", "description": "Target language word or phrase." },
+        "translation": { "type": "string", "description": "Native language meaning." },
+        "language": { "type": "string", "description": "Language of the vocabulary item." },
+        "masteryLevel": { "type": "integer", "description": "Spaced repetition mastery tier (0-5)." },
+        "isMistake": { "type": "boolean", "description": "Flagged from missed quiz question." },
+        "isFavorite": { "type": "boolean", "description": "Bookmarked in personal dictionary." },
+        "phonetic": { "type": "string", "description": "Optional pronunciation guide." },
+        "exampleSentence": { "type": "string", "description": "Optional contextual sentence." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "word", "translation", "language", "masteryLevel", "isMistake", "isFavorite", "createdAt", "updatedAt"]
+    },
+    "AppHistoryItem": {
+      "title": "AppHistoryItem",
+      "description": "Saved cloud history record for Noxra AI chats, English 1-50 levels, Math 1-50 levels, subscriptions, and friend chats.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner UID." },
+        "category": {
+          "type": "string",
+          "enum": ["Noxra AI", "English 1-50", "Math 1-50", "Subscription", "Friend Chat", "System", "Lesson"],
+          "description": "History item category."
+        },
+        "title": { "type": "string", "description": "Short history title." },
+        "summary": { "type": "string", "description": "Detailed summary or AI prompt/response excerpt." },
+        "subjectOrMode": { "type": "string", "description": "Optional class/tier or tutor mode tag." },
+        "levelNumber": { "type": "integer", "description": "Optional completed level number (1-50)." },
+        "xpEarned": { "type": "integer", "description": "Optional XP awarded." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "category", "title", "summary", "createdAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public PII-free leaderboard and searchable @username friend directory.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner UID." },
+        "displayName": { "type": "string", "description": "Public learner name." },
+        "username": { "type": "string", "description": "Optional public @username handle." },
+        "studentClass": { "type": "string", "description": "Optional class/grade for class leaderboard filter." },
+        "learningLanguage": { "type": "string", "description": "Active course language." },
+        "xp": { "type": "integer", "description": "XP score for rankings." },
+        "streak": { "type": "integer", "description": "Active daily streak." },
+        "league": {
+          "type": "string",
+          "enum": ["Bronze", "Silver", "Gold", "Sapphire", "Emerald"],
+          "description": "Current weekly league tier."
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "private"],
+          "description": "Visibility control for leaderboard queries."
+        },
+        "avatarEmoji": { "type": "string", "description": "Selected avatar badge." },
+        "fluencyScore": { "type": "integer", "description": "Fluency score (0-100)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "displayName", "learningLanguage", "xp", "streak", "league", "visibility", "createdAt", "updatedAt"]
+    },
+    "DirectChatMessage": {
+      "title": "DirectChatMessage",
+      "description": "Real-time 1-on-1 direct message between two learners found via @username friend search.",
+      "type": "object",
+      "properties": {
+        "conversationKey": { "type": "string", "description": "Sorted deterministic conversation key (minUid_maxUid)." },
+        "participants": { "type": "array", "description": "Bounded 2-element list of [senderId, recipientId] UIDs." },
+        "senderId": { "type": "string", "description": "UID of message sender." },
+        "senderName": { "type": "string", "description": "Display name of sender." },
+        "senderUsername": { "type": "string", "description": "Optional @username of sender." },
+        "recipientId": { "type": "string", "description": "UID of message recipient." },
+        "recipientName": { "type": "string", "description": "Optional display name of recipient." },
+        "recipientUsername": { "type": "string", "description": "Optional @username of recipient." },
+        "text": { "type": "string", "description": "Chat message text (1-1000 chars)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["conversationKey", "participants", "senderId", "senderName", "recipientId", "text", "createdAt"]
+    },
+    "CommunityPost": {
+      "title": "CommunityPost",
+      "description": "Social study group update, milestone share, or language discussion with cheers and report moderation.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string", "description": "UID of the post creator." },
+        "authorName": { "type": "string", "description": "Display name of post creator." },
+        "language": { "type": "string", "description": "Target language topic." },
+        "content": { "type": "string", "description": "Post message content." },
+        "cheersCount": { "type": "integer", "description": "Encouragement cheers count." },
+        "visibility": {
+          "type": "string",
+          "enum": ["active", "reported"],
+          "description": "Moderation visibility status."
+        },
+        "tag": { "type": "string", "description": "Study group or milestone tag." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["authorId", "authorName", "language", "content", "cheersCount", "visibility", "createdAt", "updatedAt"]
+    },
+    "RegistrationEvent": {
+      "title": "RegistrationEvent",
+      "description": "Automatic new-user registration alert and AI email dispatch record viewable by the user and Admin Dashboard.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique User ID." },
+        "userName": { "type": "string", "description": "Registered User Full Name." },
+        "studentHandle": { "type": "string", "description": "Registered @username handle." },
+        "studentClass": { "type": "string", "description": "Registered student class or grade." },
+        "studentAge": { "type": "integer", "description": "Registered student age (5-120)." },
+        "selectedTier": { "type": "string", "enum": ["Basic", "Mid", "Advance"], "description": "Selected starting practice tier." },
+        "nativeLanguage": { "type": "string", "description": "Student native language." },
+        "learningLanguage": { "type": "string", "description": "Student primary target language." },
+        "email": { "type": "string", "description": "Registered Email Address (PII restricted to owner/admin)." },
+        "registrationDate": { "type": "string", "description": "Formatted Registration Date." },
+        "registrationTime": { "type": "string", "description": "Formatted Registration Time." },
+        "registrationMethod": { "type": "string", "enum": ["Google"], "description": "Authentication provider." },
+        "aiAdminEmailSummary": { "type": "string", "description": "Gemini AI-generated registration report sent to Admin email." },
+        "autoEmailStatus": { "type": "string", "description": "Automatic AI email dispatch status to ksachin29845@gmail.com." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": ["userId", "userName", "email", "registrationDate", "registrationTime", "registrationMethod", "createdAt"]
+    },
+    "CustomCourseLesson": {
+      "title": "CustomCourseLesson",
+      "description": "Admin-authored interactive language or school subject lesson available to all authenticated students.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string", "description": "UID of verified administrator who published the lesson." },
+        "title": { "type": "string", "description": "Lesson title." },
+        "subjectOrLanguage": { "type": "string", "description": "Language or school subject name." },
+        "level": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"], "description": "Difficulty tier." },
+        "studentClass": { "type": "string", "description": "Optional target class/grade." },
+        "objective": { "type": "string", "description": "Short learning objective." },
+        "questionPrompt": { "type": "string", "description": "Interactive practice question." },
+        "options": { "type": "array", "description": "2-4 answer options." },
+        "correctAnswer": { "type": "string", "description": "Expected answer string." },
+        "explanation": { "type": "string", "description": "Teaching explanation shown after check." },
+        "xpReward": { "type": "integer", "description": "XP awarded upon completion (5-200)." },
+        "status": { "type": "string", "enum": ["published", "archived"], "description": "Publication visibility status." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp via FieldValue.serverTimestamp()." }
+      },
+      "required": [
+        "authorId", "title", "subjectOrLanguage", "level", "objective",
+        "questionPrompt", "options", "correctAnswer", "explanation",
+        "xpReward", "status", "createdAt", "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted administrator lookup collection."
+    },
+    "/app_config/{configId}": {
+      "schema": { "$ref": "#/entities/DeveloperConfig" },
+      "description": "Global official Developer Profile configuration (developer_profile) readable by signed-in users and writable strictly by verified owner/admin (ksachin29845@gmail.com)."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private learner profile and progress data."
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/SmartNotification" },
+      "description": "Per-user smart notification inbox."
+    },
+    "/users/{userId}/vocabulary/{wordId}": {
+      "schema": { "$ref": "#/entities/SavedVocabulary" },
+      "description": "Per-user smart revision notebook and saved dictionary words."
+    },
+    "/users/{userId}/app_history/{historyId}": {
+      "schema": { "$ref": "#/entities/AppHistoryItem" },
+      "description": "Per-user saved app history across Noxra AI, English 1-50, Math 1-50, and subscriptions."
+    },
+    "/leaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Public PII-free league leaderboard and @username friend search directory."
+    },
+    "/direct_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/DirectChatMessage" },
+      "description": "Real-time 1-on-1 direct friend chat messages isolated to the two participants."
+    },
+    "/community_posts/{postId}": {
+      "schema": { "$ref": "#/entities/CommunityPost" },
+      "description": "Social community encouragement feed and study group discussions."
+    },
+    "/registration_events/{userId}": {
+      "schema": { "$ref": "#/entities/RegistrationEvent" },
+      "description": "Automatic new-user registration notifications for Admin Dashboard."
+    },
+    "/custom_courses/{courseId}": {
+      "schema": { "$ref": "#/entities/CustomCourseLesson" },
+      "description": "Admin-managed custom language and school subject lessons."
+    }
+  }
+}

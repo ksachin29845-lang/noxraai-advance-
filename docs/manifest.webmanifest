@@ -1,0 +1,9 @@
+{
+  "name": "Noxra AI — Smart English & Math Levels 1–50",
+  "short_name": "Noxra AI",
+  "description": "Master English & Math Levels 1–50 with Noxra AI Tutor, Speaking Lab, and Global Ranked Leaderboards.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0ea5e9"
+}
