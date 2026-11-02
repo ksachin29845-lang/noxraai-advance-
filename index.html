@@ -1,1034 +1,424 @@
-@font-face{font-family:Nunito;src:url(/* embedded font data omitted */)}
-@font-face{font-family:Jakarta;src:url(/* embedded font data omitted */)}
-*{box-sizing:border-box}
-:root{
- --navy:#111a3c;
- --ink:#202944;
- --muted:#8992a9;
- --line:#edf0f6;
- --purple:#6c63e8;
- --bg:#f6f7fb
-}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOXRA AI - Learn Beyond Limits</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 body{
- margin:0;
- background:var(--bg);
- color:var(--ink);
- font-family:Nunito,Arial,sans-serif
+  font-family:Arial,sans-serif;
+  background:#f5f6fb;
+  color:#202944;
 }
-.app-shell{display:flex;min-height:100vh}
+.app{display:flex;min-height:100vh}
 .sidebar{
- width:248px;
- background:#fff;
- border-right:1px solid #edf0f5;
- padding:25px 17px;
- display:flex;
- flex-direction:column;
- flex-shrink:0
+  width:245px;background:white;padding:25px 16px;
+  border-right:1px solid #eee;flex-shrink:0;
 }
-.brand{
- display:flex;
- align-items:center;
- gap:11px;
- padding:0 8px 34px
+.logo{font-size:23px;font-weight:900;color:#172044;margin-bottom:35px}
+.logo span{color:#7167e8}
+.logo small{display:block;font-size:9px;letter-spacing:3px;color:#999}
+.menu-title{font-size:11px;color:#999;margin:15px 10px}
+.nav button{
+  display:block;width:100%;padding:13px;
+  border:0;background:white;text-align:left;
+  border-radius:10px;margin:4px 0;
+  font-size:14px;color:#788098;cursor:pointer;
 }
-.brand img{
- width:48px;
- height:48px;
- object-fit:cover;
- border-radius:14px
+.nav button:hover,.nav button.active{
+  background:#efedff;color:#665ce0;
 }
-.brand b{
- font:900 18px Jakarta,sans-serif;
- letter-spacing:1.5px;
- color:#172044
-}
-.brand b span{color:#6c63e8}
-.brand small{
- display:block;
- font-size:8px;
- letter-spacing:2px;
- color:#98a0b4;
- margin-top:3px;
- font-weight:900
-}
-.side-label,.eyebrow{
- font-size:9px;
- letter-spacing:1.5px;
- font-weight:900;
- color:#9aa2b5
-}
-.side-label{padding:0 12px 12px}
-.sidebar nav{display:grid;gap:5px}
-.nav-item{
- border:0;
- background:transparent;
- color:#7d879f;
- text-align:left;
- padding:12px 13px;
- border-radius:12px;
- font:800 13px Nunito;
- display:flex;
- align-items:center;
- gap:13px;
- cursor:pointer
-}
-.nav-item i{
- font-style:normal;
- font-size:19px;
- width:22px;
- text-align:center;
- color:#9099b0
-}
-.nav-item.active{
- background:#f0efff;
- color:#6159d8
-}
-.nav-item.active i{color:#6159d8}
-.nav-item em{
- font:900 8px Jakarta;
- background:#e5fbf3;
- color:#2caa7a;
- padding:4px 6px;
- border-radius:5px;
- margin-left:auto
-}
-.sidebar-bottom{margin-top:auto}
-.help-card{
- margin:22px 3px 18px;
- padding:16px;
- background:linear-gradient(140deg,#f2f0ff,#f8f7ff);
- border-radius:16px
-}
-.help-icon{
- width:29px;
- height:29px;
- border-radius:9px;
- background:#fff;
- color:#7168e9;
- display:grid;
- place-items:center;
- margin-bottom:10px
-}
-.help-card b{font-size:13px}
-.help-card p{
- font-size:11px;
- color:#8a91a7;
- line-height:1.5;
- margin:5px 0 12px
-}
-.help-card button{
- border:0;
- background:none;
- padding:0;
- color:#655de0;
- font:900 11px Nunito;
- cursor:pointer
-}
-.help-card button span{margin-left:15px}
-.main-area{flex:1;min-width:0}
+.main{flex:1;min-width:0}
 .topbar{
- height:76px;
- background:#fff;
- border-bottom:1px solid #edf0f5;
- display:flex;
- align-items:center;
- justify-content:space-between;
- padding:0 38px;
- position:sticky;
- top:0;
- z-index:5
+  height:70px;background:white;display:flex;
+  justify-content:space-between;align-items:center;
+  padding:0 30px;border-bottom:1px solid #eee;
 }
-.breadcrumb{font-size:12px;color:#9aa2b5}
-.breadcrumb span{padding:0 9px;color:#c3c8d3}
-.breadcrumb b{color:#34405d}
-.top-actions{display:flex;align-items:center;gap:13px}
-.streak-pill,.gem-pill{
- border:1px solid #edf0f6;
- border-radius:10px;
- padding:8px 11px;
- font-size:12px
+.profile{font-weight:bold;font-size:13px}
+.content{padding:30px;max-width:1200px;margin:auto}
+h1{font-size:27px;margin-bottom:10px}
+.muted{color:#929bb0;font-size:13px;line-height:1.6}
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:15px;margin:25px 0;
 }
-.streak-pill span{
- font-size:10px;
- color:#929bb0;
- margin-left:4px
+.card{
+  background:white;padding:20px;border-radius:15px;
+  border:1px solid #eee;margin-bottom:16px;
 }
-.gem-pill{color:#319dd0}
-.icon-btn{
- border:0;
- background:#f7f8fc;
- border-radius:10px;
- width:37px;
- height:37px;
- font-size:18px;
- position:relative;
- color:#77829b
+.stat{font-size:12px;color:#888}
+.stat strong{display:block;font-size:27px;margin-top:12px;color:#29334e}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}
+h2{font-size:17px;margin-bottom:15px}
+h3{font-size:14px;margin-bottom:8px}
+.course{
+  background:#f8f7ff;padding:16px;border-radius:12px;
+  margin:12px 0;
 }
-.dot{
- position:absolute;
- right:7px;
- top:7px;
- width:6px;
- height:6px;
- background:#ff797d;
- border-radius:50%
+button.primary{
+  background:#6c63e8;color:white;border:0;
+  padding:11px 17px;border-radius:9px;
+  cursor:pointer;font-weight:bold;
 }
-.profile-mini{
- border:0;
- background:none;
- display:flex;
- align-items:center;
- gap:8px;
- text-align:left;
- cursor:pointer;
- color:#35405b;
- font-family:Nunito
+button.primary:hover{background:#554bd0}
+input,textarea{
+  width:100%;padding:13px;border:1px solid #ddd;
+  border-radius:9px;margin:10px 0;
+  font:inherit;
 }
-.profile-mini b{font-size:11px;display:block}
-.profile-mini small{font-size:9px;color:#9aa2b5}
-.profile-mini>span:last-child{color:#9aa2b5}
-.avatar{
- width:34px;
- height:34px;
- background:#e9e8ff;
- color:#625bdb;
- border-radius:50%;
- display:grid;
- place-items:center;
- font-weight:900
+textarea{min-height:90px;resize:vertical}
+.page{display:none}
+.page.active{display:block}
+.chatbox{
+  height:300px;overflow-y:auto;background:#f8f8fc;
+  padding:15px;border-radius:12px;margin-bottom:12px;
 }
-.content{
- max-width:1450px;
- margin:auto;
- padding:31px 38px 22px
+.message{padding:12px;margin:8px 0;background:white;border-radius:10px;font-size:14px}
+.message.user{background:#eeecff;text-align:right}
+.item{
+  padding:13px;background:#fafaff;
+  border:1px solid #eee;border-radius:10px;margin:9px 0;
 }
-.welcome-row{
- display:flex;
- align-items:center;
- justify-content:space-between;
- margin-bottom:23px
+footer{text-align:center;color:#999;font-size:11px;padding:25px}
+@media(max-width:800px){
+ .app{display:block}
+ .sidebar{width:100%;padding:12px}
+ .logo{margin-bottom:12px}
+ .nav{display:flex;overflow-x:auto;gap:5px}
+ .nav button{white-space:nowrap;width:auto}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .grid{grid-template-columns:1fr}
+ .content{padding:18px}
+ .topbar{padding:0 18px}
 }
-.welcome-row h1{
- font:800 25px Jakarta;
- margin:8px 0;
- color:#1e2946;
- letter-spacing:-.8px
-}
-.welcome-row h1 span{color:#655de0}
-.subhead{font-size:12px;color:#929bb0;margin:0}
-.live-dot{
- display:inline-block;
- width:6px;
- height:6px;
- border-radius:50%;
- background:#36c89a;
- margin-right:6px
-}
-.date-chip{
- border:1px solid #e9ecf3;
- background:#fff;
- border-radius:10px;
- padding:10px 13px;
- color:#7f89a0;
- font-size:11px
-}
-.stats-grid{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:15px;
- margin-bottom:17px
-}
-.stat-card,.card{
- background:#fff;
- border:1px solid #edf0f5;
- border-radius:16px;
- box-shadow:0 3px 14px rgba(31,45,83,.025)
-}
-.stat-card{padding:16px 18px;min-height:122px}
-.stat-top{
- display:flex;
- align-items:center;
- justify-content:space-between;
- font-size:9px;
- letter-spacing:1px;
- font-weight:900;
- color:#929bb0
-}
-.stat-icon{
- width:26px;
- height:26px;
- border-radius:8px;
- display:grid;
- place-items:center;
- background:#f2f0ff;
- color:#6c63e8;
- font-size:14px
-}
-.stat-card strong{
- font:900 25px Jakarta;
- display:block;
- margin:7px 0 5px;
- color:#26314e
-}
-.stat-card strong small{font:700 12px Nunito;color:#8f98ad}
-.stat-foot{
- font-size:10px;
- color:#929bb0;
- display:flex;
- justify-content:space-between;
- align-items:center
-}
-.xp .stat-foot span{color:#39b88b}
-.streak .stat-icon{background:#fff3e9;color:#ff9b49}
-.hearts .stat-icon{background:#fff0f2;color:#f17888}
-.level .stat-icon{background:#fff8e7;color:#dcae35}
-.mini-bars{display:flex;align-items:end;gap:3px;height:17px}
-.mini-bars i{
- display:block;
- width:4px;
- background:#a9a2fa;
- border-radius:4px
-}
-.mini-bars i:nth-child(1){height:7px}
-.mini-bars i:nth-child(2){height:11px}
-.mini-bars i:nth-child(3){height:9px}
-.mini-bars i:nth-child(4){height:15px}
-.mini-bars i:nth-child(5){height:12px}
-.mini-bars i:nth-child(6){height:17px}
-.mini-bars i:nth-child(7){height:14px}
-.hearts-row{color:#f27d8b;letter-spacing:4px;font-size:13px}
-.progress-line{
- height:6px;
- background:#f0f1f7;
- border-radius:10px;
- overflow:hidden
-}
-.progress-line i,.challenge-progress i{
- display:block;
- height:100%;
- background:linear-gradient(90deg,#7d72f0,#a69dff);
- border-radius:10px
-}
-.level .progress-line{margin:9px 0 6px}
-.dashboard-grid{
- display:grid;
- grid-template-columns:1.55fr 1fr;
- gap:16px
-}
-.left-column,.right-column{
- display:grid;
- gap:16px;
- align-content:start
-}
-.card{padding:19px 20px}
-.card-heading{
- display:flex;
- align-items:center;
- justify-content:space-between;
- margin-bottom:16px
-}
-.card-heading h2{
- font:800 16px Jakarta;
- margin:4px 0 0;
- color:#26314e
-}
-.text-link{
- border:0;
- background:none;
- color:#6b63df;
- font:900 11px Nunito;
- cursor:pointer
-}
-.course-feature{
- display:flex;
- align-items:center;
- gap:14px;
- padding:15px;
- background:#fafaff;
- border:1px solid #f0effb;
- border-radius:13px
-}
-.course-symbol{
- width:50px;
- height:50px;
- border-radius:13px;
- display:grid;
- place-items:center;
- font-size:25px;
- font-weight:900;
- flex-shrink:0
-}
-.blue{background:#e8efff;color:#5479d9}
-.tag{font-size:8px;letter-spacing:1px;font-weight:900}
-.blue-tag{color:#6482d5}
-.course-info{flex:1;min-width:0}
-.course-info h3{
- font:800 13px Jakarta;
- margin:5px 0;
- color:#2d3856
-}
-.course-info p{
- font-size:10px;
- color:#929bb0;
- margin:0 0 10px
-}
-.course-progress{display:flex;align-items:center;gap:9px}
-.course-progress .progress-line{flex:1}
-.course-progress span{font-size:9px;color:#7f88a0;font-weight:900}
-.round-play{
- width:35px;
- height:35px;
- border:0;
- border-radius:50%;
- background:#6c63e8;
- color:white;
- cursor:pointer;
- font-size:12px;
- flex-shrink:0;
- box-shadow:0 5px 12px #6c63e833
-}
-.lesson-meta{
- display:flex;
- gap:18px;
- padding:12px 3px 0;
- font-size:9px;
- color:#929bb0
-}
-.path-card{padding-bottom:17px}
-.path-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.path-tile{
- position:relative;
- border:1px solid #edf0f5;
- background:#fff;
- border-radius:12px;
- padding:12px 9px;
- text-align:left;
- cursor:pointer;
- min-width:0
-}
-.path-tile:hover{border-color:#c9c5ff;background:#fbfaff}
-.path-emoji{
- width:35px;
- height:35px;
- border-radius:10px;
- display:grid;
- place-items:center;
- font-size:16px;
- font-weight:900;
- margin-bottom:9px
-}
-.purple{background:#f0edff;color:#796fe6}
-.orange{background:#fff2e5;color:#e99b47}
-.green{background:#e8f8ef;color:#42a77a}
-.cyan{background:#e6f7fb;color:#43a9c2}
-.path-tile b{display:block;font-size:11px;color:#34405c}
-.path-tile small{
- display:block;
- color:#9aa2b5;
- font-size:8px;
- margin-top:3px;
- white-space:nowrap
-}
-.path-arrow{position:absolute;right:9px;top:11px;color:#b0b6c6;font-size:12px}
+</style>
+</head>
+
 <body>
-<div class="app-shell">
+<div class="app">
+
 <aside class="sidebar">
- <div class="brand">
-  <img src="[embedded logo image]" alt="Noxra AI logo">
-  <div>
-   <b>NOXRA <span>AI</span></b>
-   <small>LEARN BEYOND LIMITS</small>
+  <div class="logo">NOXRA <span>AI</span>
+    <small>LEARN BEYOND LIMITS</small>
   </div>
- </div>
 
- <div class="side-label">MENU</div>
- <nav id="sideNav">
-  <button class="nav-item active" data-page="dashboard"><i>⌂</i>Dashboard</button>
-  <button class="nav-item" data-page="learn"><i>▤</i>Learn</button>
-  <button class="nav-item" data-page="practice"><i>✎</i>Practice</button>
-  <button class="nav-item" data-page="tutor"><i>✦</i>AI Tutor <em>NEW</em></button>
-  <button class="nav-item" data-page="speaking"><i>🎙</i>Speaking Lab</button>
-  <button class="nav-item" data-page="custom"><i>＋</i>Custom Courses</button>
-  <button class="nav-item" data-page="vocabulary"><i>▣</i>Vocabulary</button>
-  <button class="nav-item" data-page="adventure"><i>♧</i>World Adventure</button>
-  <button class="nav-item" data-page="community"><i>◎</i>Community</button>
-  <button class="nav-item" data-page="messages"><i>✉</i>Direct Chats</button>
-  <button class="nav-item" data-page="leaderboard"><i>♜</i>Leaderboard</button>
-  <button class="nav-item" data-page="shop"><i>◆</i>Rewards Shop</button>
-  <button class="nav-item" data-page="history"><i>◷</i>Cloud History</button>
-  <button class="nav-item" data-page="profile"><i>●</i>My Profile</button>
-  <button class="nav-item" data-page="developer"><i>★</i>Developer Profile</button>
-  <button class="nav-item" data-page="admin"><i>⚑</i>Admin Centre</button>
- </nav>
-
- <div class="sidebar-bottom">
-  <div class="help-card">
-   <div class="help-icon">✦</div>
-   <b>Need a little help?</b>
-   <p>Kavi is always ready to guide you.</p>
-   <button data-page="tutor">Ask Kavi <span>→</span></button>
-  </div>
-  <button class="nav-item" data-page="notifications"><i>♧</i>Notifications</button>
-  <button class="nav-item" data-page="settings"><i>⚙</i>Settings</button>
- </div>
+  <div class="menu-title">MAIN MENU</div>
+  <nav class="nav">
+    <button class="active" onclick="showPage('dashboard',this)">⌂ Dashboard</button>
+    <button onclick="showPage('learn',this)">▤ Learn</button>
+    <button onclick="showPage('practice',this)">✎ Practice</button>
+    <button onclick="showPage('tutor',this)">✦ AI Tutor</button>
+    <button onclick="showPage('vocabulary',this)">文 Vocabulary</button>
+    <button onclick="showPage('notes',this)">▣ My Notes</button>
+    <button onclick="showPage('history',this)">◷ History</button>
+    <button onclick="showPage('profile',this)">● My Profile</button>
+    <button onclick="showPage('settings',this)">⚙ Settings</button>
+  </nav>
 </aside>
 
-<main class="main-area">
- <header class="topbar">
-  <button class="mobile-menu" id="menuBtn">☰</button>
-  <div class="breadcrumb">
-   Workspace <span>/</span> <b id="crumb">Dashboard</b>
+<main class="main">
+
+<header class="topbar">
+  <span>Workspace / Learning</span>
+  <div class="profile" id="profileName">S SachinExplorer</div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page active">
+  <p class="muted">YOUR LEARNING SPACE</p>
+  <h1>Welcome back, <span id="welcomeName">Sachin</span>!</h1>
+  <p class="muted">Every great journey begins with one small step. Ready to learn?</p>
+
+  <div class="stats">
+    <div class="card">
+      <div class="stat">TOTAL XP</div>
+      <strong id="xp">2450</strong>
+    </div>
+    <div class="card">
+      <div class="stat">CURRENT STREAK</div>
+      <strong>7 Days</strong>
+    </div>
+    <div class="card">
+      <div class="stat">ENERGY</div>
+      <strong>5 / 5</strong>
+    </div>
+    <div class="card">
+      <div class="stat">YOUR LEVEL</div>
+      <strong>Level 8</strong>
+    </div>
   </div>
-  <div class="top-actions">
-   <div class="streak-pill">🔥 <b>7</b><span>day streak</span></div>
-   <div class="gem-pill">💎 <b>250</b></div>
-   <button class="icon-btn" title="Notifications" id="notifyBtn">
-    ♧<span class="dot"></span>
-   </button>
-   <button class="profile-mini" data-page="profile">
-    <span class="avatar">S</span>
-    <span><b>Sachin</b><small>Explorer</small></span>
-    <span>⌄</span>
-   </button>
-  </div>
- </header>
 
- <div class="content" id="content">
-  <section class="welcome-row">
-   <div>
-    <div class="eyebrow">
-     <span class="live-dot"></span> YOUR LEARNING SPACE
-    </div>
-    <h1>Welcome back, <span>Sachin!</span> 👋</h1>
-    <p class="subhead">
-     Every great journey begins with one small step.
-     Ready to learn something amazing today?
-    </p>
-   </div>
-   <div class="date-chip" id="today"></div>
-  </section>
-
-  <section class="stats-grid">
-   <article class="stat-card xp">
-    <div class="stat-top">
-     <span>⭐ TOTAL XP</span>
-     <span class="stat-icon">✦</span>
-    </div>
-    <strong>2,450</strong>
-    <div class="stat-foot">
-     <span>↗ 12% this week</span>
-     <div class="mini-bars">
-      <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-     </div>
-    </div>
-   </article>
-
-   <article class="stat-card streak">
-    <div class="stat-top">
-     <span>🔥 CURRENT STREAK</span>
-     <span class="stat-icon">♨</span>
-    </div>
-    <strong>7 <small>days</small></strong>
-    <div class="stat-foot">Personal best: 12 days</div>
-   </article>
-
-   <article class="stat-card hearts">
-    <div class="stat-top">
-     <span>♥ ENERGY</span>
-     <span class="stat-icon">♥</span>
-    </div>
-    <strong>5 <small>/ 5</small></strong>
-    <div class="hearts-row">♥ ♥ ♥ ♥ ♥</div>
-   </article>
-
-   <article class="stat-card level">
-    <div class="stat-top">
-     <span>🏆 YOUR LEVEL</span>
-     <span class="stat-icon">♛</span>
-    </div>
-    <strong>Level 8</strong>
-    <div class="progress-line">
-     <i style="width:68%"></i>
-    </div>
-    <div class="stat-foot">680 / 1,000 XP to Level 9</div>
-   </article>
-  </section>
-
-  <section class="dashboard-grid">
-   <div class="left-column">
-    <article class="card continue-card">
-     <div class="card-heading">
-      <div>
-       <span class="eyebrow">PICK UP WHERE YOU LEFT OFF</span>
-       <h2>Continue learning</h2>
-      </div>
-      <button class="text-link" data-page="learn">View all →</button>
-     </div>
-
-     <div class="course-feature">
-      <div class="course-symbol blue">文</div>
-      <div class="course-info">
-       <div class="tag blue-tag">ENGLISH • BEGINNER</div>
-       <h3>Everyday English Conversations</h3>
-       <p>Build confidence with real-life conversations.</p>
-       <div class="course-progress">
-        <div class="progress-line"><i style="width:64%"></i></div>
-        <span>64%</span>
-       </div>
-      </div>
-      <button class="round-play" data-page="learn">▶</button>
-     </div>
-
-     <div class="lesson-meta">
-      <span>📘 Lesson 12 of 20</span>
-      <span>⏱ 8 min left</span>
-      <span>⭐ +25 XP</span>
-     </div>
-    </article>
-
-    <article class="card path-card">
-     <div class="card-heading">
-      <div>
-       <span class="eyebrow">YOUR JOURNEY</span>
-       <h2>Explore learning paths</h2>
-      </div>
-      <button class="text-link" data-page="learn">See all →</button>
-     </div>
-
-     <div class="path-grid">
-      <button class="path-tile" data-page="learn">
-       <span class="path-emoji purple">Aa</span>
-       <b>English</b>
-       <small>Grammar & speaking</small>
-       <span class="path-arrow">↗</span>
-      </button>
-
-      <button class="path-tile" data-page="learn">
-       <span class="path-emoji orange">∑</span>
-       <b>Mathematics</b>
-       <small>Numbers & logic</small>
-       <span class="path-arrow">↗</span>
-      </button>
-
-      <button class="path-tile" data-page="learn">
-       <span class="path-emoji green">⚛</span>
-       <b>Science</b>
-       <small>Discover the world</small>
-       <span class="path-arrow">↗</span>
-      </button>
-
-      <button class="path-tile" data-page="learn">
-       <span class="path-emoji cyan">文</span>
-       <b>Languages</b>
-       <small>Explore new cultures</small>
-       <span class="path-arrow">↗</span>
-      </button>
-     </div>
-    </article>
-   </div>
-
-   <div class="right-column">
-    <article class="kavi-card">
-     <div class="kavi-copy">
-      <span class="eyebrow">YOUR AI COMPANION</span>
-      <h2>Hey Sachin,<br>I'm <span>Kavi!</span></h2>
-      <p>What shall we discover together today?</p>
-      <button class="kavi-button" data-page="tutor">
-       Chat with Kavi <b>→</b>
-      </button>
-     </div>
-     <img src="[embedded Kavi image]" alt="Kavi, your learning companion">
-    </article>
-
-    <article class="card daily-card">
-     <div class="card-heading">
-      <div>
-       <span class="eyebrow">DAILY CHALLENGE</span>
-       <h2>One step today</h2>
-      </div>
-      <span class="challenge-icon">⚡</span>
-     </div>
-
-     <p>Complete 2 lessons to keep your learning streak alive.</p>
-     <div class="challenge-bottom">
-      <div class="challenge-progress"><i style="width:50%"></i></div>
-      <b>1 / 2</b>
-     </div>
-     <button class="outline-btn" data-page="practice">
-      Continue challenge →
-     </button>
-    </article>
-   </div>
-  </section>
-
-  <section class="card activity-card">
-   <div class="card-heading">
+  <div class="grid">
     <div>
-     <span class="eyebrow">YOUR WEEK AT A GLANCE</span>
-     <h2>Learning activity</h2>
-    </div>
-    <span class="week-label">THIS WEEK ▾</span>
-   </div>
+      <div class="card">
+        <h2>Continue Learning</h2>
+        <div class="course">
+          <h3>English Grammar</h3>
+          <p class="muted">Build your English skills.</p>
+          <p>Progress: 64%</p>
+          <button class="primary" onclick="showPage('learn')">Continue →</button>
+        </div>
+        <div class="course">
+          <h3>Mathematics</h3>
+          <p class="muted">Numbers, logic and problem solving.</p>
+          <button class="primary" onclick="showPage('practice')">Start Practice →</button>
+        </div>
+      </div>
 
-   <div class="activity-chart">
-    <div class="y-labels">
-     <span>60m</span><span>40m</span><span>20m</span><span>0</span>
+      <div class="card">
+        <h2>Explore Learning Paths</h2>
+        <div class="item">📘 English Grammar & Speaking</div>
+        <div class="item">➗ Mathematics</div>
+        <div class="item">⚛ Science</div>
+        <div class="item">🌍 General Knowledge</div>
+      </div>
     </div>
-    <div class="chart-area">
-     <div class="grid-lines"><i></i><i></i><i></i><i></i></div>
-     <div class="bar-set">
-      <div class="bar-col"><i style="height:42%"></i><small>Mon</small></div>
-      <div class="bar-col"><i style="height:72%"></i><small>Tue</small></div>
-      <div class="bar-col"><i style="height:55%"></i><small>Wed</small></div>
-      <div class="bar-col"><i style="height:88%"></i><small>Thu</small></div>
-      <div class="bar-col"><i style="height:62%"></i><small>Fri</small></div>
-      <div class="bar-col"><i style="height:34%"></i><small>Sat</small></div>
-      <div class="bar-col today-bar"><i style="height:24%"></i><small>Sun</small></div>
-     </div>
-    </div>
-   </div>
-  </section>
 
-  <footer>© 2026 Noxra AI <span>Made for curious minds ✦</span></footer>
- </div>
+    <div>
+      <div class="card">
+        <h2>Your AI Companion</h2>
+        <h3>Hello! I'm Kavi.</h3>
+        <p class="muted">Your learning companion is ready to help you explore new things.</p>
+        <br>
+        <button class="primary" onclick="showPage('tutor')">Chat with Kavi →</button>
+      </div>
+
+      <div class="card">
+        <h2>Daily Challenge</h2>
+        <p class="muted">Complete two lessons today.</p>
+        <br>
+        <p>1 / 2 completed</p>
+        <br>
+        <button class="primary" onclick="showPage('practice')">Continue Challenge</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARN -->
+<section id="learn" class="page">
+  <h1>Learning Centre</h1>
+  <p class="muted">Choose your favourite subject.</p>
+  <br>
+  <div class="card">
+    <h3>English</h3>
+    Grammar, vocabulary and speaking.
+  </div>
+  <div class="card">
+    <h3>Mathematics</h3>
+    Numbers, algebra and geometry.
+  </div>
+  <div class="card">
+    <h3>Science</h3>
+    Discover the world of science.
+  </div>
+  <div class="card">
+    <h3>General Knowledge</h3>
+    Learn about countries, history and current affairs.
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section id="practice" class="page">
+  <h1>Practice Centre</h1>
+  <p class="muted">Improve your knowledge with practice.</p>
+  <div class="card">
+    <h3>Quick Question</h3>
+    <p>What is the capital of India?</p>
+    <br>
+    <button class="primary" onclick="alert('Correct answer: New Delhi')">Show Answer</button>
+  </div>
+</section>
+
+<!-- AI TUTOR -->
+<section id="tutor" class="page">
+  <h1>✦ Kavi AI Tutor</h1>
+  <p class="muted">Your personal learning assistant.</p>
+  <br>
+  <div class="card">
+    <div class="chatbox" id="chatbox">
+      <div class="message">Kavi: Hello! What would you like to learn today?</div>
+    </div>
+    <input id="question" placeholder="Ask Kavi a question...">
+    <button class="primary" onclick="sendMessage()">Send ↑</button>
+  </div>
+  <p class="muted">Demo mode: Connect an AI API through a secure backend to enable real AI answers.</p>
+</section>
+
+<!-- VOCABULARY -->
+<section id="vocabulary" class="page">
+  <h1>My Vocabulary</h1>
+  <div class="card">
+    <h3>Save a new word</h3>
+    <input id="word" placeholder="Enter a word">
+    <button class="primary" onclick="saveWord()">Save Word</button>
+    <div id="wordList"></div>
+  </div>
+</section>
+
+<!-- NOTES -->
+<section id="notes" class="page">
+  <h1>My Notes</h1>
+  <div class="card">
+    <h3>Create a note</h3>
+    <input id="noteTitle" placeholder="Note title">
+    <textarea id="noteText" placeholder="Write your notes here..."></textarea>
+    <button class="primary" onclick="saveNote()">Save Note</button>
+    <div id="notesList"></div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history" class="page">
+  <h1>Cloud History</h1>
+  <p class="muted">Your locally saved activity.</p>
+  <div class="card" id="historyList">No activity yet.</div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+  <h1>My Profile</h1>
+  <div class="card">
+    <h3>Your name</h3>
+    <input id="nameInput" placeholder="Enter your name">
+    <button class="primary" onclick="saveName()">Save Profile</button>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+  <h1>Settings</h1>
+  <div class="card">
+    <h3>Website Preferences</h3>
+    <p class="muted">Manage your learning experience.</p>
+    <br>
+    <button class="primary" onclick="clearData()">Clear Local Data</button>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  © 2026 NOXRA AI | Learn Beyond Limits
+  <br><br>
+  Made for curious minds.
+</footer>
 </main>
 </div>
 
-<div class="toast" id="toast"></div>
-/* Noxra AI web companion — interactive frontend preview.
-   Live cloud/AI services require Firebase and server configuration. */
+<script>
+function showPage(id,button){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 
-const pages={
- dashboard:['Dashboard','Your Noxra AI learning space'],
- learn:['Learn','English and Mathematics mastery'],
- practice:['Practice','Build skills with focused practice'],
- tutor:['AI Tutor','Ask Kavi to explain, translate or quiz you'],
- speaking:['Speaking Lab','Practise pronunciation and speaking'],
- custom:['Custom Courses','Create and publish your own lessons'],
- vocabulary:['Vocabulary','Save and review useful words'],
- community:['Community','Share learning with other students'],
- messages:['Direct Chats','Find friends and chat one-to-one'],
- leaderboard:['Leaderboard','Compare learning achievements'],
- shop:['Rewards Shop','Explore boosts and Kavi treats'],
- adventure:['World Adventure','Explore the Noxra learning world'],
- notifications:['Notifications','Your learning reminders and updates'],
- history:['Cloud History','Your saved lessons and AI chats'],
- profile:['My Profile','Your learner details and goals'],
- developer:['Official Developer Profile','About the Noxra AI creator'],
- settings:['Settings','Manage your account and preferences'],
- admin:['Admin Centre','Registration and community moderation tools']
-};
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(button) button.classList.add('active');
 
-const content=document.getElementById('content');
-
-function toast(msg){
- let t=document.getElementById('toast');
- t.textContent=msg;
- t.classList.add('show');
- clearTimeout(window.toastTimer);
- window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+  if(id==='history') loadHistory();
+  if(id==='notes') loadNotes();
+  if(id==='vocabulary') loadWords();
 }
 
-const demoNote='<p class="integration-note">Preview mode: this screen is recreated from the Android app features. Connect the same Firebase project and secure server functions to sync real accounts, progress and AI.</p>';
-
-function cards(items){
- return `<div class="mini-grid">${items.map(x=>
- `<article class="mini-card">
- <span>${x[0]}</span>
- <b>${x[1]}</b>
- <small>${x[2]}</small>
- <button data-toast="${x[3]||'This feature needs the app backend to be connected.'}">${x[4]||'Open →'}</button>
- </article>`).join('')}</div>`;
+function escapeHTML(text){
+  return text.replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;',
+    '"':'&quot;',"'":'&#39;'
+  })[c]);
 }
 
-function renderPage(key){
- if(!pages[key])key='dashboard';
- const [title,desc]=pages[key];
+function saveName(){
+  let name=document.getElementById('nameInput').value.trim();
+  if(!name)return alert('Enter your name first.');
+  localStorage.setItem('noxraName',name);
+  updateName();
+  alert('Profile saved!');
+}
 
- document.getElementById('crumb').textContent=title;
- document.querySelectorAll('.nav-item').forEach(b=>
-  b.classList.toggle('active',b.dataset.page===key)
- );
- document.querySelector('.sidebar').classList.remove('open');
+function updateName(){
+  let name=localStorage.getItem('noxraName')||'Sachin';
+  document.getElementById('welcomeName').textContent=name;
+  document.getElementById('profileName').textContent='S '+name;
+  document.getElementById('nameInput').value=name;
+}
 
- let body='';
+function saveWord(){
+  let word=document.getElementById('word').value.trim();
+  if(!word)return;
+  let words=JSON.parse(localStorage.getItem('noxraWords')||'[]');
+  words.push(word);
+  localStorage.setItem('noxraWords',JSON.stringify(words));
+  document.getElementById('word').value='';
+  loadWords();
+}
 
- if(key==='dashboard'){
-  location.hash='';
-  location.reload();
-  return;
- }
+function loadWords(){
+  let words=JSON.parse(localStorage.getItem('noxraWords')||'[]');
+  document.getElementById('wordList').innerHTML=
+    words.map(w=>'<div class="item">'+escapeHTML(w)+'</div>').join('')||'No saved words.';
+}
 
- if(key==='learn')
- body=`<div class="mini-grid">${
- [
-  ['📘','English mastery','50-level English path: grammar, vocabulary, sentence building and speaking.'],
-  ['➗','Mathematics mastery','50-level maths path: mental maths, equations, geometry and problem solving.'],
-  ['⬇️','Offline courses','Download available lesson packs for offline learning.'],
-  ['🧩','Custom courses','Open lessons created and published by learners.']
- ].map(x=>`<article class="mini-card">
- <span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small>
- <button data-toast="Course catalogue needs your app's live curriculum and Firebase connection.">Open learning →</button>
- </article>`).join('')
- }</div>${demoNote}`;
+function saveNote(){
+  let title=document.getElementById('noteTitle').value.trim();
+  let text=document.getElementById('noteText').value.trim();
+  if(!title||!text)return alert('Enter a title and note.');
+  let notes=JSON.parse(localStorage.getItem('noxraNotes')||'[]');
+  notes.push({title,text});
+  localStorage.setItem('noxraNotes',JSON.stringify(notes));
+  document.getElementById('noteTitle').value='';
+  document.getElementById('noteText').value='';
+  loadNotes();
+}
 
- else if(key==='practice')
- body=cards([
-  ['✍️','English practice','Grammar, vocabulary and sentence building.'],
-  ['➗','Maths practice','Mental maths, equations and geometry.'],
-  ['🧠','Personalised AI quiz','Generate a practice quiz for a topic.'],
-  ['❤️','Regain energy','Practice can help restore a heart in the Android app.']
- ])+demoNote;
+function loadNotes(){
+  let notes=JSON.parse(localStorage.getItem('noxraNotes')||'[]');
+  document.getElementById('notesList').innerHTML=notes.map(n=>
+    '<div class="item"><h3>'+escapeHTML(n.title)+'</h3>'+
+    '<p>'+escapeHTML(n.text)+'</p></div>'
+  ).join('')||'No notes saved.';
+}
 
- else if(key==='tutor')
- body=`<div class="feature-panel tutor-panel">
- <img src="[Kavi image data omitted]" alt="Kavi">
- <div>
- <span class="eyebrow">NOXRA AI TUTOR</span>
- <h2>Hi! I'm Kavi 👋</h2>
- <p>I can explain a concept, help with a lesson answer, create a quiz, translate with context or tell an interactive learning story.</p>
- <div class="quick-prompts">
- <button>Explain a topic</button>
- <button>Make me a quiz</button>
- <button>Translate a sentence</button>
- <button>Tell me a learning story</button>
- </div>
- </div>
- </div>
- <div class="chat-box">
- <div id="chatLog">
- <div class="chat-message">✨ <b>Kavi:</b> Welcome! What would you like to learn today?</div>
- </div>
- <div class="chat-compose">
- <input id="chatInput" placeholder="Ask Kavi a question…">
- <button id="sendChat">Send ↑</button>
- </div>
- </div>${demoNote}`;
+function addHistory(text){
+  let history=JSON.parse(localStorage.getItem('noxraHistory')||'[]');
+  history.unshift(text);
+  localStorage.setItem('noxraHistory',JSON.stringify(history.slice(0,30)));
+}
 
- else if(key==='speaking')
- body=cards([
-  ['🎙️','Pronunciation coach','Record a phrase and receive a pronunciation report.'],
-  ['🗣️','Speaking practice','Practise clear spoken English.'],
-  ['🔤','Syllable practice','Break words into syllables and practise them.']
- ])+`<div class="rank-card">
- <h3>Speaking Lab</h3>
- <p>Your browser can request microphone permission, but live speech analysis requires the secure AI service used by the Android app.</p>
- <button class="primary-btn" id="micBtn">🎙️ Check microphone</button>
- <p id="micStatus"></p>
- </div>${demoNote}`;
+function loadHistory(){
+  let history=JSON.parse(localStorage.getItem('noxraHistory')||'[]');
+  document.getElementById('historyList').innerHTML=
+    history.map(h=>'<div class="item">'+escapeHTML(h)+'</div>').join('')||'No activity yet.';
+}
 
- else if(key==='custom')
- body=`<div class="rank-card">
- <h3>Create a custom lesson</h3>
- <label>Course title<input id="courseTitle" placeholder="e.g. Everyday English"></label>
- <label>Lesson topic<input id="courseTopic" placeholder="What should students learn?"></label>
- <button class="primary-btn" id="createCourse">Create lesson draft</button>
- <div id="courseResult"></div>
- </div>
- <h3>Published custom courses</h3>
- ${cards([['📚','Community courses','Lessons published by learners.']])}
- ${demoNote}`;
+function sendMessage(){
+  let input=document.getElementById('question');
+  let q=input.value.trim();
+  if(!q)return;
 
- else if(key==='vocabulary')
- body=`<div class="rank-card">
- <h3>My saved vocabulary</h3>
- <div class="chat-compose">
- <input id="wordInput" placeholder="Add a word to revise">
- <button id="saveWord">Save word</button>
- </div>
- <div id="wordList"></div>
- </div>${demoNote}`;
+  let chat=document.getElementById('chatbox');
+  chat.innerHTML+='<div class="message user">'+escapeHTML(q)+'</div>';
+  chat.innerHTML+='<div class="message">Kavi: This is a demo website. Connect a secure AI API to get real answers to your questions.</div>';
 
- else if(key==='community')
- body=`<div class="rank-card">
- <h3>Share with the Noxra AI learner community</h3>
- <textarea id="postText" placeholder="Share a learning achievement or helpful tip…" style="width:100%;min-height:100px;padding:14px;border:1px solid #dfe5f1;border-radius:12px"></textarea>
- <button class="primary-btn" id="publishPost">Publish post</button>
- <div id="postFeed">
- <div class="rank-row">
- <b>✦</b><strong>Welcome to the Noxra AI community</strong><span>Demo post</span>
- </div>
- </div>
- </div>${demoNote}`;
-  else if(key==='messages')body=`<div class="rank-card"><h3>Find a learning friend</h3><p>Search a friend's @username to start a private one-to-one conversation.</p><div class="chat-compose"><input id="friendName" placeholder="@username"><button id="findFriend">Search</button></div><div id="friendResult"></div></div>${demoNote}`;
+  addHistory('Asked Kavi: '+q);
+  input.value='';
+  chat.scrollTop=chat.scrollHeight;
+}
 
-else if(key==='leaderboard')body=`<div class="rank-card"><span class="eyebrow">LEARNER RANKINGS</span><div class="rank-row"><b>🏆</b><strong>Leaderboard</strong><span>Live rankings need cloud data</span></div><p>Leaderboard privacy settings are available in your profile preferences.</p></div>${demoNote}`;
-
-else if(key==='shop')body=cards([
- ['⚡','Double XP boost','2× XP across eligible English and Maths levels.'],
- ['❤️','Heart refill','Restore learning energy.'],
- ['🍓','Kavi treat','Give Kavi a treat and celebrate progress.'],
- ['🎖️','Special badges','Unlock profile achievements.']
-])+demoNote;
-
-else if(key==='adventure')body=`<div class="adventure-hero">
-<img src="[embedded image data omitted]" alt="Noxra world adventure">
-<div>
-<span class="eyebrow">EXPLORE • LEARN • DISCOVER</span>
-<h2>Your learning adventure awaits</h2>
-<p>Explore learning worlds and complete challenges as you progress.</p>
-<button class="primary-btn" data-toast="The interactive adventure map requires the app's lesson and reward services.">Explore world →</button>
-</div>
-</div>${demoNote}`;
-
-else if(key==='notifications')body=`<div class="rank-card">
-<h3>Notification centre</h3>
-${['Learning reminders','Streak reminders','Community activity','Account and security updates','Sound','Vibration'].map(x=>`<label class="setting-row"><span>${x}</span><input type="checkbox" checked></label>`).join('')}
-<button class="primary-btn" data-toast="Notification preferences are shown in this preview. Cloud delivery needs backend setup.">Save preferences</button>
-</div>${demoNote}`;
-
-else if(key==='history')body=`<div class="rank-card">
-<h3>Your cloud history</h3>
-<p>Lessons, levels and AI tutor conversations are designed to be saved to your Noxra AI cloud history.</p>
-<div class="rank-row"><b>📘</b><strong>Completed lessons</strong><span>Connect account to load</span></div>
-<div class="rank-row"><b>✦</b><strong>AI tutor conversations</strong><span>Connect account to load</span></div>
-</div>${demoNote}`;
-
-else if(key==='profile')body=`<div class="rank-card profile-settings">
-<div class="profile-large">S</div>
-<h2>Learner profile</h2>
-<label>Display name<input value="Learner"></label>
-<label>@username<input placeholder="Choose username"></label>
-<label>Learning goal<input placeholder="e.g. Practise English every day"></label>
-<label>Leaderboard privacy<select><option>Visible</option><option>Private</option></select></label>
-<button class="primary-btn" data-toast="Profile editing requires Firebase account connection.">Save profile</button>
-</div>${demoNote}`;
-
-else if(key==='developer')body=`<div class="feature-panel tutor-panel">
-<img src="[embedded image data omitted]" alt="Noxra AI logo">
-<div>
-<span class="eyebrow">OFFICIAL DEVELOPER PROFILE</span>
-<h2>Noxra AI</h2>
-<p>Created to make English and Mathematics learning, AI tutoring and friendly learning competitions accessible and engaging.</p>
-<p>Developer profile details can be edited and synced from the authorised app account.</p>
-</div>
-</div>${demoNote}`;
-
-else if(key==='admin')body=`<div class="rank-card">
-<h3>Administrator tools</h3>
-<p>Registration reports, reported community posts, developer settings and email audit tools are restricted to the authorised administrator account.</p>
-<p>For safety, this public website does not expose admin controls or secret keys.</p>
-</div>${demoNote}`;
-
-else body=`<div class="rank-card">
-<h3>Preferences</h3>
-${['Learning language','Email notifications','Smart study notifications','Pause notifications','Offline course downloads','Leaderboard privacy'].map(x=>`<label class="setting-row"><span>${x}</span><input type="checkbox" checked></label>`).join('')}
-<button class="primary-btn" data-toast="Settings preview only. Sign in to sync preferences.">Save settings</button>
-</div>${demoNote}`;
-
-content.innerHTML=`<section class="page-heading">
-<div>
-<div class="eyebrow">NOXRA AI WORKSPACE</div>
-<h1>${title}</h1>
-<p>${desc}</p>
-</div>
-<button class="back-btn" data-page="dashboard">← Dashboard</button>
-</section>${body}
-<footer>© 2026 Noxra AI <span>Learn beyond limits ✦</span></footer>`;
-
-content.querySelectorAll('[data-toast]').forEach(b=>
- b.addEventListener('click',()=>toast(b.dataset.toast))
-);
-
-content.querySelectorAll('[data-page]').forEach(b=>
- b.addEventListener('click',()=>renderPage(b.dataset.page))
-);
-
-if(key==='tutor'){
- content.querySelectorAll('.quick-prompts button').forEach(b=>
-  b.onclick=()=>document.getElementById('chatInput').value=b.textContent
- );
-
- document.getElementById('sendChat').onclick=()=>{
-  let v=document.getElementById('chatInput').value.trim();
-  if(v){
-   document.getElementById('chatLog').insertAdjacentHTML(
-    'beforeend',
-    `<div class="chat-message"><b>You:</b> ${escapeHtml(v)}</div>
-     <div class="chat-message">✨ <b>Kavi:</b> Live AI replies will work after the secure Gemini backend is connected.</div>`
-   );
-   document.getElementById('chatInput').value='';
+function clearData(){
+  if(confirm('Clear your saved notes, words and history?')){
+    ['noxraWords','noxraNotes','noxraHistory'].forEach(k=>localStorage.removeItem(k));
+    loadWords();
+    loadNotes();
+    loadHistory();
+    alert('Local data cleared.');
   }
- };
 }
 
-if(key==='speaking')
- document.getElementById('micBtn').onclick=async()=>{
-  try{
-   let s=await navigator.mediaDevices.getUserMedia({audio:true});
-   s.getTracks().forEach(t=>t.stop());
-   document.getElementById('micStatus').textContent=
-   'Microphone permission is available. Connect speech analysis for pronunciation feedback.';
-  }catch(e){
-   document.getElementById('micStatus').textContent=
-   'Microphone permission was not granted or is unavailable.';
-  }
- };
-
-if(key==='custom')
- document.getElementById('createCourse').onclick=()=>{
-  let a=document.getElementById('courseTitle').value.trim();
-  let b=document.getElementById('courseTopic').value.trim();
-  document.getElementById('courseResult').textContent=
-   a&&b
-   ?`Draft created locally: ${a} — ${b}. Publishing requires your cloud service.`
-   :'Enter a course title and lesson topic.';
- };
-
-if(key==='vocabulary')
- document.getElementById('saveWord').onclick=()=>{
-  let v=document.getElementById('wordInput').value.trim();
-  if(v){
-   let arr=JSON.parse(localStorage.getItem('noxraWords')||'[]');
-   arr.push(v);
-   localStorage.setItem('noxraWords',JSON.stringify(arr));
-   document.getElementById('wordList').textContent=arr.join(' • ');
-   document.getElementById('wordInput').value='';
-  }
- };
-
-if(key==='community')
- document.getElementById('publishPost').onclick=()=>{
-  let v=document.getElementById('postText').value.trim();
-  if(v){
-   document.getElementById('postFeed').insertAdjacentHTML(
-    'afterbegin',
-    `<div class="rank-row"><b>✦</b><strong>${escapeHtml(v)}</strong><span>Local preview</span></div>`
-   );
-   document.getElementById('postText').value='';
-  }
- };
-
-if(key==='messages')
- document.getElementById('findFriend').onclick=()=>
-  document.getElementById('friendResult').textContent=
-  'Friend search requires the Noxra AI user database.';
-}
-
-function escapeHtml(s){
- return s.replace(/[&<>"']/g,c=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  '"':'&quot;',
-  "'":'&#39;'
- }[c]));
-}
-
-document.querySelectorAll('[data-page]').forEach(b=>
- b.addEventListener('click',()=>renderPage(b.dataset.page))
-);
-
-document.getElementById('menuBtn').onclick=()=>
- document.querySelector('.sidebar').classList.toggle('open');
-
-document.getElementById('notifyBtn').onclick=()=>
- renderPage('notifications');
-
-document.getElementById('today').textContent=
- new Date().toLocaleDateString('en-IN',{
-  weekday:'short',
-  day:'numeric',
-  month:'short',
-  year:'numeric'
-});
+updateName();
+</script>
+</body>
+</html>
